@@ -1,6 +1,6 @@
 import { AdminLayout } from '@/layouts/AdminLayout.tsx';
 import { Button } from '@/components/ui/button.tsx';
-import { ChevronLeft, ChevronRight, Plus, Search } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Loader2, Plus, Search } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -20,73 +20,30 @@ import {
 import { MoreHorizontalIcon } from 'lucide-react';
 import { Input } from '@/components/ui/input.tsx';
 import { useNavigate } from 'react-router-dom';
-
-const categories = [
-  {
-    id: '1a2b3c4d-0001-0000-0000-000000000001',
-    name: 'Obat Penyakit Umum',
-    description:
-      'Obat-obatan yang digunakan untuk mengobati penyakit umum seperti demam, flu, dan sakit kepala.',
-    product_count: 24,
-  },
-  {
-    id: '1a2b3c4d-0002-0000-0000-000000000002',
-    name: 'Vitamin & Suplemen',
-    description: 'Vitamin dan suplemen untuk menjaga kesehatan tubuh dan meningkatkan imun.',
-    product_count: 40,
-  },
-  {
-    id: '1a2b3c4d-0003-0000-0000-000000000003',
-    name: 'Alat Kesehatan',
-    description: 'Alat-alat kesehatan seperti termometer, tensimeter, dan masker medis.',
-    product_count: 15,
-  },
-  {
-    id: '1a2b3c4d-0004-0000-0000-000000000004',
-    name: 'Obat Khusus Anak',
-    description: 'Obat-obatan khusus untuk anak-anak, termasuk sirup dan vitamin anak.',
-    product_count: 12,
-  },
-  {
-    id: '1a2b3c4d-0005-0000-0000-000000000005',
-    name: 'Obat Jantung & Darah',
-    description: 'Obat-obatan untuk kesehatan jantung dan pengaturan tekanan darah.',
-    product_count: 18,
-  },
-  {
-    id: '1a2b3c4d-0006-0000-0000-000000000006',
-    name: 'Obat Diabetes',
-    description: 'Obat-obatan untuk mengontrol gula darah dan pengelolaan diabetes.',
-    product_count: 10,
-  },
-  {
-    id: '1a2b3c4d-0007-0000-0000-000000000007',
-    name: 'Obat Kulit',
-    description: 'Obat-obatan untuk perawatan kulit, termasuk eksim, jerawat, dan alergi kulit.',
-    product_count: 22,
-  },
-  {
-    id: '1a2b3c4d-0008-0000-0000-000000000008',
-    name: 'Obat Mata & Telinga',
-    description: 'Obat tetes mata, salep telinga, dan obat untuk infeksi ringan.',
-    product_count: 9,
-  },
-  {
-    id: '1a2b3c4d-0009-0000-0000-000000000009',
-    name: 'Obat Nyeri & Anti Inflamasi',
-    description: 'Obat penghilang nyeri dan anti inflamasi untuk kondisi ringan hingga sedang.',
-    product_count: 30,
-  },
-  {
-    id: '1a2b3c4d-0010-0000-0000-000000000010',
-    name: 'Obat Pencernaan',
-    description: 'Obat-obatan untuk gangguan pencernaan seperti maag, diare, dan sembelit.',
-    product_count: 16,
-  },
-];
+import { CategoryService } from '@/service/category.ts';
 
 export default function AdminCategoriesPage() {
   const navigate = useNavigate();
+  const { data: categories = [], isLoading, isError, error } = CategoryService.useAdminList();
+  const { mutate: deleteCategory, isPending: isDeleting } = CategoryService.useAdminDelete();
+
+  if (isLoading)
+    return (
+      <AdminLayout>
+        <div className="flex h-full w-full items-center justify-center">
+          <Loader2 className="animate-spin" />
+        </div>
+      </AdminLayout>
+    );
+
+  if (isError)
+    return (
+      <AdminLayout>
+        <div className="flex h-full w-full items-center justify-center">
+          <p>Error: {(error as Error).message}</p>
+        </div>
+      </AdminLayout>
+    );
 
   return (
     <AdminLayout>
@@ -145,10 +102,24 @@ export default function AdminCategoriesPage() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem>Edit</DropdownMenuItem>
-                          <DropdownMenuItem>Duplicate</DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => navigate(`/admin/categories/edit/${cat.id}`)}
+                          >
+                            Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => navigate(`/admin/categories/show/${cat.id}`)}
+                          >
+                            Lihat
+                          </DropdownMenuItem>
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+                          <DropdownMenuItem
+                            variant="destructive"
+                            disabled={isDeleting}
+                            onClick={() => deleteCategory(cat.id)}
+                          >
+                            Hapus
+                          </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>

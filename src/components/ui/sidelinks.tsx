@@ -34,7 +34,7 @@ const groupedItems = [
     items: [
       { title: 'Kategori', href: 'categories' },
       { title: 'Semua Produk', href: 'products' },
-      { title: 'Produk Diarsipkan', href: '#' },
+      { title: 'Tambah Produk Baru', href: 'products/create' },
     ],
   },
   {
@@ -130,7 +130,11 @@ export function SideLinks() {
                   {group.items.map((item) => {
                     const href = `${ADMIN_PREFIX}/${item.href}`;
                     const isActive =
-                      location.pathname === href || location.pathname.startsWith(`${href}/`);
+                      location.pathname === href ||
+                      (location.pathname.startsWith(`${href}/`) &&
+                        location.pathname !== `${ADMIN_PREFIX}/products/create`);
+                    // const isActive =
+                    //   location.pathname === href || location.pathname.startsWith(`${href}/`);
 
                     return (
                       <div key={item.title} className="px-2 py-1.5">

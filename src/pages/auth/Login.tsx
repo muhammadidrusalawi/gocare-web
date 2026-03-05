@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Mail, Lock, Loader2 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type LoginForm, loginSchema } from '@/schema/auth-schema.ts';
@@ -157,13 +157,12 @@ export default function LoginPage() {
           {/* Sign up link */}
           <p className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
             Belum punya akun?{' '}
-            <a
-              href="#"
+            <Link
+              to="/auth/sign-up"
               className="font-medium text-gray-900 hover:underline dark:text-gray-200"
-              onClick={(e) => e.preventDefault()}
             >
               Daftar
-            </a>
+            </Link>
           </p>
         </div>
       </div>

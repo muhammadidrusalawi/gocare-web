@@ -21,9 +21,12 @@ function App() {
               <Route path="dashboard" element={<R.DashboardPage />} />
 
               <Route path="categories" element={<R.AdminCategoriesPage />} />
-              <Route path="categories/create" element={<R.AdminCreateCategory />} />
+              <Route path="categories/create" element={<R.AdminCreateCategoryPage />} />
+              <Route path="categories/show/:id" element={<R.AdminShowCategoryPage />} />
+              <Route path="categories/edit/:id" element={<R.AdminUpdateCategoryPage />} />
 
               <Route path="products" element={<R.AdminProductsPage />} />
+              <Route path="products/show/:id" element={<R.AdminShowProductPage />} />
               <Route path="products/create" element={<R.AdminCreateProductPage />} />
             </Route>
           </Route>
